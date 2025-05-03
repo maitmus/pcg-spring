@@ -11,7 +11,6 @@ import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.portOne.service.PortOneService;
 import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import com.github.maitmus.pcgspring.user.v1.entity.User;
-import com.github.maitmus.pcgspring.user.v1.repository.UserRepository;
 import com.github.maitmus.pcgspring.user.v1.service.UserService;
 import com.github.maitmus.pcgspring.webclient.service.WebclientService;
 import jakarta.validation.Valid;
