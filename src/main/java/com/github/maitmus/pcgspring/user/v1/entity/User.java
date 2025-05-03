@@ -1,4 +1,4 @@
-package com.github.maitmus.pcgspring.user.entity;
+package com.github.maitmus.pcgspring.user.v1.entity;
 
 import com.github.maitmus.pcgspring.card.v1.entity.Card;
 import com.github.maitmus.pcgspring.common.constant.Role;

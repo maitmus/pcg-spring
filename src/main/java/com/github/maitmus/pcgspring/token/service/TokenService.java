@@ -1,7 +1,7 @@
 package com.github.maitmus.pcgspring.token.service;
 
 import com.github.maitmus.pcgspring.common.constant.TokenType;
-import com.github.maitmus.pcgspring.user.entity.User;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
 import com.github.maitmus.pcgspring.validator.JwtTokenValidator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

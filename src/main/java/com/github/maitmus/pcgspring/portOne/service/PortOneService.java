@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class PortOneService {
     private final WebclientService webclientService;
 
-    @Value("${billing.api.url}")
+    @Value("${portone.api.url}")
     private String billingApiUrl;
 
     @Value("${portone.api.key}")

@@ -12,9 +12,9 @@ import com.github.maitmus.pcgspring.parkingTransaction.v1.entity.ParkingTransact
 import com.github.maitmus.pcgspring.parkingTransaction.v1.repository.ParkingTransactionRepository;
 import com.github.maitmus.pcgspring.payment.v1.dto.PayRequest;
 import com.github.maitmus.pcgspring.portOne.service.PortOneService;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
-import com.github.maitmus.pcgspring.user.entity.User;
-import com.github.maitmus.pcgspring.user.service.UserService;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
+import com.github.maitmus.pcgspring.user.v1.service.UserService;
 import com.github.maitmus.pcgspring.webclient.service.WebclientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +34,7 @@ public class PaymentService {
     private final AesEncryptor aesEncryptor;
     private final ParkingTransactionRepository parkingTransactionRepository;
 
-    @Value("${billing.api.url}")
+    @Value("${portone.api.url}")
     private String billingApiUrl;
 
     @Value("${parking.fee.per.minute}")

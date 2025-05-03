@@ -1,25 +1,20 @@
 package com.github.maitmus.pcgspring.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.maitmus.pcgspring.auth.v1.repository.AuthRepository;
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.common.constant.Role;
 import com.github.maitmus.pcgspring.common.constant.TokenType;
 import com.github.maitmus.pcgspring.common.dto.CommonErrorResponse;
-import com.github.maitmus.pcgspring.token.service.TokenService;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
-import com.github.maitmus.pcgspring.user.entity.User;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import com.github.maitmus.pcgspring.validator.JwtTokenValidator;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

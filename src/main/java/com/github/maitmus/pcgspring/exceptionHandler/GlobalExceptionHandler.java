@@ -6,6 +6,8 @@ import com.github.maitmus.pcgspring.excpetion.ForbiddenException;
 import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.excpetion.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,6 +22,15 @@ public class GlobalExceptionHandler {
     public CommonErrorResponse handleBadRequestException(BadRequestException ex) {
         log.error(ex.getMessage(), ex);
         return new CommonErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public CommonErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        log.error(ex.getMessage(), ex);
+        if (ex.getCause() instanceof ConstraintViolationException) {
+            return new CommonErrorResponse(HttpStatus.CONFLICT, "Duplicate Entry");
+        }
+        return new CommonErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Request");
     }
 
     @ExceptionHandler({MissingRequestHeaderException.class})

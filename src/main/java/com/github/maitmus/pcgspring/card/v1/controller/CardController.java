@@ -5,7 +5,7 @@ import com.github.maitmus.pcgspring.card.v1.dto.CreateCardRequest;
 import com.github.maitmus.pcgspring.card.v1.dto.UpdateCardRepresentativeRequest;
 import com.github.maitmus.pcgspring.card.v1.service.CardService;
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,5 +34,11 @@ public class CardController {
     public CommonResponse<?> updateCardRepresentative(@AuthenticationPrincipal UserDetails userDetails,
                                                       @RequestBody @Valid UpdateCardRepresentativeRequest request) {
         return cardService.updateCardRepresentative(request, userDetails);
+    }
+
+    @DeleteMapping("/{id}")
+    public CommonResponse<?> deleteCard(@PathVariable Long id,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
+        return cardService.deleteCard(id, userDetails);
     }
 }

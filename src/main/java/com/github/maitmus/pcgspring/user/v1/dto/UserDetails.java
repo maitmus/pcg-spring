@@ -1,9 +1,8 @@
-package com.github.maitmus.pcgspring.user.dto;
+package com.github.maitmus.pcgspring.user.v1.dto;
 
 
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.common.constant.Role;
-import com.github.maitmus.pcgspring.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

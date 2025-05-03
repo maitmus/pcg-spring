@@ -7,9 +7,11 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 public class EmailTokenCreatedEvent extends ApplicationEvent {
     private final EmailToken token;
+    private final String rawToken;
 
-    public EmailTokenCreatedEvent(EmailToken token) {
+    public EmailTokenCreatedEvent(EmailToken token, String rawToken) {
         super(token);
         this.token = token;
+        this.rawToken = rawToken;
     }
 }

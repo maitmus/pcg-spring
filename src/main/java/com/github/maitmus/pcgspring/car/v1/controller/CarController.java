@@ -5,7 +5,7 @@ import com.github.maitmus.pcgspring.car.v1.dto.CreateCarRequest;
 import com.github.maitmus.pcgspring.car.v1.dto.CreateCarResponse;
 import com.github.maitmus.pcgspring.car.v1.service.CarService;
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

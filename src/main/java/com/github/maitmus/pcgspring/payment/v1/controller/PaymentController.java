@@ -3,7 +3,7 @@ package com.github.maitmus.pcgspring.payment.v1.controller;
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
 import com.github.maitmus.pcgspring.payment.v1.dto.PayRequest;
 import com.github.maitmus.pcgspring.payment.v1.service.PaymentService;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -11,11 +11,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardDetail {
+    private Long id;
     private UUID customerId;
     private Boolean isRepresentative;
     private String nickname;
 
     public CardDetail(Card card) {
+        this.id = card.getId();
         this.customerId = UUID.fromString(card.getCustomerId());
         this.isRepresentative = card.getIsRepresentative();
         this.nickname = card.getNickname();

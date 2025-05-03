@@ -1,4 +1,4 @@
-package com.github.maitmus.pcgspring.user.dto;
+package com.github.maitmus.pcgspring.user.v1.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

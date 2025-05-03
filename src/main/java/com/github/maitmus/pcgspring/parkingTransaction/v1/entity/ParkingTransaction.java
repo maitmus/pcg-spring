@@ -3,7 +3,7 @@ package com.github.maitmus.pcgspring.parkingTransaction.v1.entity;
 import com.github.maitmus.pcgspring.car.v1.entity.Car;
 import com.github.maitmus.pcgspring.common.entity.BaseEntity;
 import com.github.maitmus.pcgspring.park.v1.entity.Park;
-import com.github.maitmus.pcgspring.user.entity.User;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

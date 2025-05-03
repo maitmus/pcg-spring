@@ -2,7 +2,7 @@ package com.github.maitmus.pcgspring.park.v1.entity;
 
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.common.entity.BaseEntity;
-import com.github.maitmus.pcgspring.user.entity.User;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;

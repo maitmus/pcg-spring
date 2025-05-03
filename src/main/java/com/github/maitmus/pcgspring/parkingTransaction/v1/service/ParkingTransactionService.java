@@ -12,9 +12,9 @@ import com.github.maitmus.pcgspring.park.v1.repository.ParkRepository;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.*;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.entity.ParkingTransaction;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.repository.ParkingTransactionRepository;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
-import com.github.maitmus.pcgspring.user.entity.User;
-import com.github.maitmus.pcgspring.user.service.UserService;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
+import com.github.maitmus.pcgspring.user.v1.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -118,7 +118,7 @@ public class ParkingTransactionService {
         parkingTransaction.finishCharge(chargingFeePerSecond);
         parkingTransactionRepository.save(parkingTransaction);
 
-        return null;
+        return new CommonResponse<>();
     }
 
     @Transactional(readOnly = true)

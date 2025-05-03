@@ -3,7 +3,7 @@ package com.github.maitmus.pcgspring.parkingTransaction.v1.repository;
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.park.v1.entity.Park;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.entity.ParkingTransaction;
-import com.github.maitmus.pcgspring.user.entity.User;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;

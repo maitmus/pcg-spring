@@ -3,7 +3,7 @@ package com.github.maitmus.pcgspring.parkingTransaction.v1.controller;
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.*;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.service.ParkingTransactionService;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

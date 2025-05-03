@@ -8,15 +8,14 @@ import com.github.maitmus.pcgspring.common.dto.CommonResponse;
 import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.entity.ParkingTransaction;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.repository.ParkingTransactionRepository;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
-import com.github.maitmus.pcgspring.user.entity.User;
-import com.github.maitmus.pcgspring.user.service.UserService;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
+import com.github.maitmus.pcgspring.user.v1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

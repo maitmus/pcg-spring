@@ -2,6 +2,7 @@ package com.github.maitmus.pcgspring.auth.v1.service;
 
 import com.github.maitmus.pcgspring.auth.v1.dto.*;
 import com.github.maitmus.pcgspring.auth.v1.entity.EmailToken;
+import com.github.maitmus.pcgspring.auth.v1.event.EmailTokenCreatedEvent;
 import com.github.maitmus.pcgspring.auth.v1.repository.AuthRepository;
 import com.github.maitmus.pcgspring.auth.v1.repository.EmailTokenRepository;
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
@@ -10,10 +11,11 @@ import com.github.maitmus.pcgspring.common.constant.TokenType;
 import com.github.maitmus.pcgspring.excpetion.BadRequestException;
 import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.token.service.TokenService;
-import com.github.maitmus.pcgspring.user.entity.User;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
+import com.github.maitmus.pcgspring.user.v1.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,8 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final TokenService tokenService;
     private final EmailTokenRepository emailTokenRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final UserRepository userRepository;
 
     @Transactional
     public CreateUserResponse register(@Valid CreateUserRequest request) {
@@ -105,23 +109,33 @@ public class AuthService {
                 .substring(0, 6)
                 .toUpperCase();
 
-        EmailToken token = new EmailToken(tokenString, user);
+        EmailToken token = new EmailToken(passwordEncoder.encode(tokenString), user);
 
-        emailTokenRepository.save(token);
+        EmailToken newEmailToken = emailTokenRepository.save(token);
+
+        applicationEventPublisher.publishEvent(
+                new EmailTokenCreatedEvent(newEmailToken, tokenString)
+        );
     }
 
     @Transactional
     public void resetPassword(@Valid ResetPasswordRequest request) {
+        User user = userRepository.findByUsernameAndStatus(request.getUsername(), EntityStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("User not found, username: " + request.getUsername()));
         LocalDateTime threshold = LocalDateTime.now().minusMinutes(5);
-        EmailToken token = emailTokenRepository.findByTokenAndStatus(request.getToken(), EntityStatus.ACTIVE)
+
+        EmailToken token = emailTokenRepository.findByUserAndStatus(user, EntityStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("Email token not found"));
+
+        if (!passwordEncoder.matches(request.getToken(), token.getToken())) {
+            throw new BadRequestException("Invalid token");
+        }
 
         if (token.getCreatedAt().isBefore(threshold)) {
             emailTokenRepository.delete(token);
             throw new BadRequestException("Email token expired");
         }
 
-        User user = token.getUser();
         String hashedNewPassword = hashPassword(request.getPassword());
         user.setHashedPassword(hashedNewPassword);
 

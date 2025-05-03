@@ -7,11 +7,12 @@ import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
 import com.github.maitmus.pcgspring.encryptor.AesEncryptor;
 import com.github.maitmus.pcgspring.excpetion.BadRequestException;
+import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.portOne.service.PortOneService;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
-import com.github.maitmus.pcgspring.user.entity.User;
-import com.github.maitmus.pcgspring.user.repository.UserRepository;
-import com.github.maitmus.pcgspring.user.service.UserService;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.entity.User;
+import com.github.maitmus.pcgspring.user.v1.repository.UserRepository;
+import com.github.maitmus.pcgspring.user.v1.service.UserService;
 import com.github.maitmus.pcgspring.webclient.service.WebclientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class CardService {
     private final PortOneService portOneService;
     private final UserService userService;
 
-    @Value("${billing.api.url}")
+    @Value("${portone.api.url}")
     private String billingApiUrl;
 
     @Transactional
@@ -162,5 +163,17 @@ public class CardService {
 
         cardRepository.saveAll(cards);
         return new CommonResponse<>();
+    }
+
+    @Transactional
+    public CommonResponse<DeleteCardResponse> deleteCard(Long id, UserDetails userDetails) {
+        User user = userService.findByIdOrElseThrow(userDetails.getId());
+        Card card = cardRepository.findByIdAndUserAndStatus(id, user, EntityStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("Card not found, id: " + id));
+
+        card.delete();
+        cardRepository.save(card);
+
+        return new CommonResponse<>(new DeleteCardResponse(card.getId()));
     }
 }

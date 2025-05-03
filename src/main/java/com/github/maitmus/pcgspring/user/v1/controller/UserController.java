@@ -1,10 +1,10 @@
-package com.github.maitmus.pcgspring.user.controller;
+package com.github.maitmus.pcgspring.user.v1.controller;
 
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
-import com.github.maitmus.pcgspring.user.dto.UpdateUserRequest;
-import com.github.maitmus.pcgspring.user.dto.UpdateUserResult;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
-import com.github.maitmus.pcgspring.user.service.UserService;
+import com.github.maitmus.pcgspring.user.v1.dto.UpdateUserRequest;
+import com.github.maitmus.pcgspring.user.v1.dto.UpdateUserResult;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

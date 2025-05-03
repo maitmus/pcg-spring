@@ -1,14 +1,8 @@
 package com.github.maitmus.pcgspring.parkingTransaction.v1.dto;
 
 import com.github.maitmus.pcgspring.car.v1.dto.CarDetail;
-import com.github.maitmus.pcgspring.car.v1.entity.Car;
 import com.github.maitmus.pcgspring.park.v1.dto.ParkDetail;
-import com.github.maitmus.pcgspring.park.v1.entity.Park;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.entity.ParkingTransaction;
-import com.github.maitmus.pcgspring.user.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

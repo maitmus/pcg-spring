@@ -2,9 +2,8 @@ package com.github.maitmus.pcgspring.park.v1.controller;
 
 import com.github.maitmus.pcgspring.common.dto.CommonResponse;
 import com.github.maitmus.pcgspring.park.v1.dto.CreateParkRequest;
-import com.github.maitmus.pcgspring.park.v1.entity.Park;
 import com.github.maitmus.pcgspring.park.v1.service.ParkService;
-import com.github.maitmus.pcgspring.user.dto.UserDetails;
+import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
