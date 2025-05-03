@@ -36,10 +36,7 @@ public class CarService {
 
         List<ParkingTransaction> targetTransactions = parkingTransactionRepository.findByCarNumberAndStatus(car.getCarNumber(), EntityStatus.ACTIVE);
 
-        targetTransactions.forEach(transaction ->
-        {
-            transaction.linkCarInfo(user, newCar);
-        });
+        targetTransactions.forEach(transaction -> transaction.linkCarInfo(user, newCar));
 
         parkingTransactionRepository.saveAll(targetTransactions);
 

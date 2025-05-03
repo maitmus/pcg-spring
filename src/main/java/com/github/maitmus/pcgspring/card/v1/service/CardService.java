@@ -33,7 +33,6 @@ import java.util.UUID;
 public class CardService {
     private final CardRepository cardRepository;
     private final WebclientService webclientService;
-    private final UserRepository userRepository;
     private final AesEncryptor aesEncryptor;
     private final PortOneService portOneService;
     private final UserService userService;
