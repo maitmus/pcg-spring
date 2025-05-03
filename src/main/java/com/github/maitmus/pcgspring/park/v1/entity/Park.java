@@ -52,6 +52,6 @@ public class Park extends BaseEntity {
         this.lon = lon;
         this.ip = ip;
         this.owner = owner;
-        this.status = EntityStatus.ACTIVE;
+        this.status = EntityStatus.INACTIVE;
     }
 }

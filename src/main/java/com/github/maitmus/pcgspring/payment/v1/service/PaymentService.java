@@ -68,7 +68,7 @@ public class PaymentService {
         int totalAmount = transaction.getCurrentChargeAmount(chargingFeePerSecond) + parkingAmount;
 
         if (totalAmount < 100) {
-            transaction.setUnpaidTransaction();
+            transaction.setBypassTransaction();
             parkingTransactionRepository.save(transaction);
 
             return new CommonResponse<>();

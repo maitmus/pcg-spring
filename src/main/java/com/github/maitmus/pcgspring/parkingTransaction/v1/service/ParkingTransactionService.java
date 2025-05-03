@@ -73,8 +73,11 @@ public class ParkingTransactionService {
 
         ParkingTransaction parkingTransaction = findByParkAndCarNumberAndNotExited(request.getCarNumber(), park);
 
-        if (!parkingTransaction.getIsPaid()) {
+        if (parkingTransaction.isPaymentRequired(chargingFeePerSecond, parkingFeePerMinute)) {
             throw new ForbiddenException("Payment is not completed, paymentId: " + parkingTransaction.getPaymentId());
+        }
+        else {
+            parkingTransaction.setBypassTransaction();
         }
 
         parkingTransaction.exit();

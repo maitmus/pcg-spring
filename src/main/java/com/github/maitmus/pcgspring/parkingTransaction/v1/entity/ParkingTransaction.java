@@ -66,11 +66,10 @@ public class ParkingTransaction extends BaseEntity {
         this.exitTime = LocalDateTime.now();
     }
 
-    public void setUnpaidTransaction() {
+    public void setBypassTransaction() {
         this.parkingAmount = null;
         this.totalAmount = null;
-
-        recordPaymentInfos();
+        this.isPaid = true;
     }
 
     public void startCharge() {
@@ -103,8 +102,15 @@ public class ParkingTransaction extends BaseEntity {
     public void completePayment(Integer totalAmount, Integer parkingAmount) {
         this.totalAmount = totalAmount;
         this.parkingAmount = parkingAmount;
+        if (this.chargeEndTime == null) {
+            this.chargeEndTime = LocalDateTime.now();
+        }
 
         recordPaymentInfos();
+    }
+
+    public boolean isPaymentRequired(Integer chargingFeePerSecond, Integer parkingFeePerMinute) {
+        return !isPaid && getCurrentChargeAmount(chargingFeePerSecond) + getCurrentParkingAmount(parkingFeePerMinute) >= 100;
     }
 
     private void recordPaymentInfos() {
