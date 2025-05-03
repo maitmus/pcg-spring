@@ -30,13 +30,18 @@ public class BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EntityStatus status;
+    protected EntityStatus status;
 
     @PrePersist
     public void prePersist() {
         if (status == null) {
             this.status = EntityStatus.ACTIVE;
         }
+    }
+
+    public void delete() {
+        this.status = EntityStatus.DELETED;
+        this.deletedAt = LocalDateTime.now();
     }
 }
 

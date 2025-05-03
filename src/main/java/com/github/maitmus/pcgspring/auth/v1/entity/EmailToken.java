@@ -1,6 +1,5 @@
 package com.github.maitmus.pcgspring.auth.v1.entity;
 
-import com.github.maitmus.pcgspring.auth.v1.event.EmailTokenCreatedEvent;
 import com.github.maitmus.pcgspring.auth.v1.event.EmailTokenCreatedEventListener;
 import com.github.maitmus.pcgspring.common.entity.BaseEntity;
 import com.github.maitmus.pcgspring.user.entity.User;

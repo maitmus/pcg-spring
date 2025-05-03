@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class UserDetails {
     private String email;
     @Schema(description = "유저 아이디")
     private String username;
+    @Schema(description = "생년월일")
+    private LocalDate birth;
     @Schema(description = "역할")
     private List<Role> roles;
     @Schema(description = "계정 활성화 여부")

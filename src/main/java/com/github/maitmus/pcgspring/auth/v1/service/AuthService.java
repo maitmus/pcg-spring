@@ -43,6 +43,7 @@ public class AuthService {
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .password(password)
+                .birth(request.getBirth())
                 .roles(Stream.of(Role.USER).collect(Collectors.toList()))
                 .build();
 
@@ -72,6 +73,7 @@ public class AuthService {
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .birth(user.getBirth())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .accessToken(accessToken)

@@ -2,7 +2,7 @@ package com.github.maitmus.pcgspring.user.service;
 
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.common.constant.TokenType;
-import com.github.maitmus.pcgspring.excpetion.BadRequestException;
+import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.token.service.TokenService;
 import com.github.maitmus.pcgspring.user.dto.UpdateUserRequest;
 import com.github.maitmus.pcgspring.user.dto.UpdateUserResult;
@@ -20,8 +20,7 @@ public class UserService {
 
     @Transactional
     public UpdateUserResult updateUser(Long id, UpdateUserRequest request) {
-        User user = userRepository.findByIdAndStatus(id, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new BadRequestException("User not found, id: " + id));
+        User user = findByIdOrElseThrow(id);
 
         user.update(request.getNickname(), request.getEmail());
         User updatedUser = userRepository.save(user);
@@ -29,5 +28,11 @@ public class UserService {
         String accessToken = tokenService.generateToken(updatedUser, TokenType.ACCESS);
 
         return new UpdateUserResult(updatedUser.getId(), accessToken);
+    }
+
+    @Transactional(readOnly = true)
+    public User findByIdOrElseThrow(Long id) {
+        return userRepository.findByIdAndStatus(id, EntityStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("User not found, id: " + id));
     }
 }

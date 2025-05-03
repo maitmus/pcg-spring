@@ -1,6 +1,6 @@
 package com.github.maitmus.pcgspring.user.entity;
 
-import com.github.maitmus.pcgspring.card.entity.Card;
+import com.github.maitmus.pcgspring.card.v1.entity.Card;
 import com.github.maitmus.pcgspring.common.constant.Role;
 import com.github.maitmus.pcgspring.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,23 +36,26 @@ public class User extends BaseEntity {
     @Column(length = 200, nullable = false)
     private String password;
 
+    @Column
+    private LocalDate birth;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "userId"))
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne
-    private Card card;
+    @OneToMany
+    private List<Card> cards;
 
     public void setHashedPassword(String hashedPassword) {
         this.password = hashedPassword;
     }
 
     public void update(String nickname, String email) {
-        if (nickname != null && !nickname.isEmpty()) {
+        if (StringUtils.hasText(nickname)) {
             this.nickname = nickname;
         }
-        if (email != null && !email.isEmpty()) {
+        if (StringUtils.hasText(email)) {
             this.email = email;
         }
     }

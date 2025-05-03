@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -72,13 +73,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 List<Role> roles = rolesString.stream().map(Role::valueOf).toList();
                 String statusString = claims.get("status", String.class);
                 EntityStatus status = EntityStatus.valueOf(statusString);
+                String rawBirth = claims.get("birth", String.class);
                 String rawCreatedAt = claims.get("createdAt", String.class);
                 String rawUpdatedAt = claims.get("updatedAt", String.class);
 
+                LocalDate birth = LocalDate.parse(rawBirth);
                 LocalDateTime createdAt = LocalDateTime.parse(rawCreatedAt);
                 LocalDateTime updatedAt = LocalDateTime.parse(rawUpdatedAt);
 
-                UserDetails userDetails = new UserDetails(id, name, nickname, email, username, roles, status, createdAt, updatedAt);
+                UserDetails userDetails = new UserDetails(id, name, nickname, email, username, birth, roles, status, createdAt, updatedAt);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

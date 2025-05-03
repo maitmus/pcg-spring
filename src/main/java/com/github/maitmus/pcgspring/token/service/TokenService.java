@@ -24,6 +24,7 @@ public class TokenService {
         claims.put("name", user.getName());
         claims.put("nickname", user.getNickname());
         claims.put("email", user.getEmail());
+        claims.put("birth", user.getBirth().toString());
         claims.put("username", user.getUsername());
         claims.put("roles", user.getRoles());
         claims.put("status", user.getStatus());
