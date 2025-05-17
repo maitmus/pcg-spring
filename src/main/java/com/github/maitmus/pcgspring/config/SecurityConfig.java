@@ -33,7 +33,8 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/webjars/**",
-            "/error"
+            "/error",
+            "v1/parking-transaction/**"
     );
 
     public SecurityConfig(CorsConfigurationSource corsConfigurationSource,

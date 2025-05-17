@@ -42,15 +42,9 @@ public class ParkingTransactionController {
         return parkingTransactionService.finishCharge(request, manageCode);
     }
 
-    @GetMapping
-    public CommonResponse<ParkingTransactionDetails> getParkingTransactions(@AuthenticationPrincipal UserDetails userDetails,
-                                                                            @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return parkingTransactionService.getParkingTransactions(userDetails, pageable);
-    }
-
-    @GetMapping("/current")
-    public CommonResponse<CurrentParkingTransactionDetails> getCurrentParkingTransaction(@AuthenticationPrincipal UserDetails userDetails) {
-        return parkingTransactionService.getCurrentParkingTransaction(userDetails);
+    @GetMapping("/unpaid")
+    public CommonResponse<ParkingTransactionDetail> getUnpaidParkingTransaction(@RequestHeader(name = "manage-code") String manageCode,
+                                                                                      @RequestParam String carNumber) {
+        return parkingTransactionService.getUnpaidParkingTransaction(manageCode, carNumber);
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,15 +42,14 @@ public class AuthService {
         String password = hashPassword(request.getPassword());
         request.setHashedPassword(password);
 
-        User user = User.builder()
-                .name(request.getName())
-                .nickname(request.getNickname())
-                .email(request.getEmail())
-                .username(request.getUsername())
-                .password(password)
-                .birth(request.getBirth())
-                .roles(Stream.of(Role.USER).collect(Collectors.toList()))
-                .build();
+        User user = new User(
+            request.getName(),
+            request.getNickname(),
+            request.getEmail(),
+            request.getUsername(),
+            request.getPassword(),
+            request.getBirth()
+        );
 
         User newUser = authRepository.save(user);
 

@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -64,6 +66,14 @@ public class PaymentService {
                 EntityStatus.ACTIVE
         ).orElseThrow(() -> new BadRequestException("Parking Transaction not found, paymentId: " + request.getPaymentId()));
 
+        if (transaction.getCar() == null) {
+            throw new BadRequestException("Car not linked, paymentId: " + request.getPaymentId());
+        }
+
+        if (!Objects.equals(transaction.getCar().getUser().getId(), user.getId())) {
+            throw new BadRequestException("Invalid payment, paymentId: " + request.getPaymentId());
+        }
+
         int parkingAmount = transaction.getCurrentParkingAmount(parkingFeePerMinute);
         int totalAmount = transaction.getCurrentChargeAmount(chargingFeePerSecond) + parkingAmount;
 
@@ -83,7 +93,7 @@ public class PaymentService {
         formData.add("buyer_name", user.getName());
         formData.add("product_type", "digital");
 
-        PortOneGeneralResponse<?> response =  webclientService.sendFormDataRequest(
+        PortOneGeneralResponse<?> response = webclientService.sendFormDataRequest(
                 HttpMethod.POST,
                 billingApiUrl + "/subscribe/payments/again",
                 formData,

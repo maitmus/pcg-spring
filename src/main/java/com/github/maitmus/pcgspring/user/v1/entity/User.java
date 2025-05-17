@@ -1,11 +1,10 @@
 package com.github.maitmus.pcgspring.user.v1.entity;
 
 import com.github.maitmus.pcgspring.card.v1.entity.Card;
+import com.github.maitmus.pcgspring.common.constant.EntityStatus;
 import com.github.maitmus.pcgspring.common.constant.Role;
 import com.github.maitmus.pcgspring.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -18,8 +17,6 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class User extends BaseEntity {
     @Column(length = 20)
     private String name;
@@ -42,7 +39,7 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "userId"))
     @Enumerated(EnumType.STRING)
-    private List<Role> roles = new ArrayList<>();
+    private final List<Role> roles = new ArrayList<>();
 
     @OneToMany
     private List<Card> cards;
@@ -58,5 +55,16 @@ public class User extends BaseEntity {
         if (StringUtils.hasText(email)) {
             this.email = email;
         }
+    }
+
+    public User(String name, String nickname, String email, String username, String password, LocalDate birth) {
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.birth = birth;
+        this.roles.add(Role.USER);
+        this.status = EntityStatus.ACTIVE;
     }
 }

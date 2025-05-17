@@ -21,4 +21,5 @@ public interface ParkingTransactionRepository extends JpaRepository<ParkingTrans
     List<ParkingTransaction> findByCarNumberAndStatus(String carNumber, EntityStatus status);
     List<ParkingTransaction> findByUserAndStatusAndIsPaidIsFalse(User user, EntityStatus status);
     Slice<ParkingTransaction> findByUserAndStatus(User user, EntityStatus entityStatus, Pageable pageable);
+    Optional<ParkingTransaction> findByCarNumberAndParkAndStatus(String carNumber, Park park, EntityStatus status);
 }

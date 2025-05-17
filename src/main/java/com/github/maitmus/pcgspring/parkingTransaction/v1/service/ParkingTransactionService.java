@@ -154,5 +154,13 @@ public class ParkingTransactionService {
                 .orElseThrow(() -> new NotFoundException("Park not found"));
     }
 
+    @Transactional(readOnly = true)
+    public CommonResponse<ParkingTransactionDetail> getUnpaidParkingTransaction(String manageCode, String carNumber) {
+        Park park = findParkByManageCode(manageCode);
 
+        ParkingTransaction transaction = parkingTransactionRepository.findByCarNumberAndParkAndStatus(carNumber, park, EntityStatus.ACTIVE)
+            .orElseThrow(() -> new NotFoundException("Parking transaction not found, carNumber: " + carNumber + ", park: " + park.getId()));
+
+        return new CommonResponse<>(new ParkingTransactionDetail(transaction));
+    }
 }
