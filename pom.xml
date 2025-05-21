@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.github.maitmus</groupId>
     <artifactId>pcg-spring</artifactId>
@@ -108,9 +108,15 @@
             <version>1.5.18</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
+        <finalName>pcg-back</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

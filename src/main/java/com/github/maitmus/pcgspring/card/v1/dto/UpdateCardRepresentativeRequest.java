@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UpdateCardRepresentativeRequest {
-    private String customerId;
+    private Long id;
 }

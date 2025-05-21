@@ -74,6 +74,7 @@ public class CardService {
 
             Card card = new Card(
                     encryptedCustomerUid,
+                    request.getCardNumber().substring(request.getCardNumber().length() - 4),
                     request.getIsRepresentative(),
                     request.getNickname(),
                     user
@@ -128,18 +129,10 @@ public class CardService {
 
         List<Card> cards = cardRepository.findByUserAndStatus(user, EntityStatus.ACTIVE);
 
-        cards.forEach(card -> {
-            try {
-                card.setDecryptedCustomerId(aesEncryptor.decrypt(card.getCustomerId()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        Optional<Card> targetCard = cards.stream().filter(card -> card.getCustomerId().equals(request.getCustomerId())).findFirst();
+        Optional<Card> targetCard = cards.stream().filter(card -> card.getId().equals(request.getId())).findFirst();
 
         if (targetCard.isEmpty()) {
-            throw new BadRequestException("Card not found, id: " + request.getCustomerId());
+            throw new BadRequestException("Card not found, id: " + request.getId());
         }
 
         cards.forEach(card -> {
@@ -148,14 +141,6 @@ public class CardService {
             }
             else {
                 card.setRepresentative();
-            }
-        });
-
-        cards.forEach(card -> {
-            try {
-                card.setDecryptedCustomerId(aesEncryptor.encrypt(card.getCustomerId()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
         });
 

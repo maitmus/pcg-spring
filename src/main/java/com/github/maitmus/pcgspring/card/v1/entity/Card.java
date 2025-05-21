@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class Card extends BaseEntity {
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String customerId;
+
+    @Column(nullable = false)
+    private String lastFourDigits;
 
     @Column(nullable = false)
     private Boolean isRepresentative;

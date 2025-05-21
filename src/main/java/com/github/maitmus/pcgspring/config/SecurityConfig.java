@@ -26,15 +26,17 @@ public class SecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final List<String> urlWhitelist = List.of(
-            "/v1/auth/**",
-            "/h2-console/**",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/error",
-            "v1/parking-transaction/**"
+        "/v1/auth/**",
+        "/h2-console/**",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-resources/**",
+        "/swagger-ui.html",
+        "/webjars/**",
+        "/error",
+        "/v1/parking-transaction/**",
+        "/health/**",
+        "/v1/public/**"
     );
 
     public SecurityConfig(CorsConfigurationSource corsConfigurationSource,
@@ -61,7 +63,6 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -70,15 +71,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors(cors ->
-                        cors.configurationSource(corsConfigurationSource))
-                .csrf(CsrfConfigurer::disable)
-                .headers(httpHeaders ->
-                        httpHeaders.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests(auth -> {
-                    urlWhitelist.forEach(url -> auth.requestMatchers(url).permitAll());
-                    auth.anyRequest().authenticated();
-                })
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                cors.configurationSource(corsConfigurationSource))
+            .csrf(CsrfConfigurer::disable)
+            .headers(httpHeaders ->
+                httpHeaders.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .authorizeHttpRequests(auth -> {
+                urlWhitelist.forEach(url -> auth.requestMatchers(url).permitAll());
+                auth.anyRequest().authenticated();
+            })
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 }

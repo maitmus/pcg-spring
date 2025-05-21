@@ -1,5 +1,5 @@
 <configuration>
-    <property name="LOG_PATH" value="logs" />
+    <property name="LOG_PATH" value="/app/logs" />
     <property name="LOG_FILE_NAME" value="app" />
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n" />
 
@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <springProfile name="prod">
+    <springProfile name="!local">
         <appender name="FILE1" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -24,10 +24,11 @@
 
         <root level="INFO">
             <appender-ref ref="FILE1" />
+            <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
 
-    <springProfile name="dev,local,debug">
+    <springProfile name="local">
         <root level="DEBUG">
             <appender-ref ref="CONSOLE" />
         </root>
