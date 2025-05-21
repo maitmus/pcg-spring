@@ -42,7 +42,8 @@ public class Park extends BaseEntity {
     @OneToOne
     private User owner;
 
-    public Park(String name, String phone, String address, Integer disabilitySpace, String manageCode, Double lat, Double lon, String ip, User owner) {
+    public Park(String name, String phone, String address, Integer disabilitySpace, String manageCode, Double lat,
+                Double lon, String ip, User owner) {
         this.name = name;
         this.phone = phone;
         this.address = address;

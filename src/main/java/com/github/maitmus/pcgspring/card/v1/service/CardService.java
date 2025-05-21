@@ -1,6 +1,11 @@
 package com.github.maitmus.pcgspring.card.v1.service;
 
-import com.github.maitmus.pcgspring.card.v1.dto.*;
+import com.github.maitmus.pcgspring.card.v1.dto.CardDetail;
+import com.github.maitmus.pcgspring.card.v1.dto.CardDetails;
+import com.github.maitmus.pcgspring.card.v1.dto.CreateCardRequest;
+import com.github.maitmus.pcgspring.card.v1.dto.DeleteCardResponse;
+import com.github.maitmus.pcgspring.card.v1.dto.PortOneGeneralResponse;
+import com.github.maitmus.pcgspring.card.v1.dto.UpdateCardRepresentativeRequest;
 import com.github.maitmus.pcgspring.card.v1.entity.Card;
 import com.github.maitmus.pcgspring.card.v1.repository.CardRepository;
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
@@ -58,11 +63,11 @@ public class CardService {
         formData.add("pwd_2digit", request.getPasswordFirstTwoDigits());
 
         PortOneGeneralResponse<?> response = webclientService.sendFormDataRequest(
-                HttpMethod.POST,
-                billingApiUrl + "/subscribe/customers/" + customerUid,
-                formData,
-                PortOneGeneralResponse.class,
-                accessToken
+            HttpMethod.POST,
+            billingApiUrl + "/subscribe/customers/" + customerUid,
+            formData,
+            PortOneGeneralResponse.class,
+            accessToken
         );
 
         if (response.getCode() != 0) {
@@ -73,18 +78,18 @@ public class CardService {
             String encryptedCustomerUid = aesEncryptor.encrypt(customerUid.toString());
 
             Card card = new Card(
-                    encryptedCustomerUid,
-                    request.getCardNumber().substring(request.getCardNumber().length() - 4),
-                    request.getIsRepresentative(),
-                    request.getNickname(),
-                    user
+                encryptedCustomerUid,
+                request.getCardNumber().substring(request.getCardNumber().length() - 4),
+                request.getIsRepresentative(),
+                request.getNickname(),
+                user
             );
 
             if (request.getIsRepresentative()) {
                 Card existedCard = cardRepository.findByIsRepresentativeAndUserAndStatus(
-                        true,
-                        user,
-                        EntityStatus.ACTIVE
+                    true,
+                    user,
+                    EntityStatus.ACTIVE
                 ).orElse(null);
 
                 if (existedCard != null) {
@@ -124,7 +129,8 @@ public class CardService {
     }
 
     @Transactional
-    public CommonResponse<?> updateCardRepresentative(@Valid UpdateCardRepresentativeRequest request, UserDetails userDetails) {
+    public CommonResponse<?> updateCardRepresentative(@Valid UpdateCardRepresentativeRequest request,
+                                                      UserDetails userDetails) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
 
         List<Card> cards = cardRepository.findByUserAndStatus(user, EntityStatus.ACTIVE);
@@ -138,8 +144,7 @@ public class CardService {
         cards.forEach(card -> {
             if (!card.getCustomerId().equals(targetCard.get().getCustomerId())) {
                 card.unsetRepresentative();
-            }
-            else {
+            } else {
                 card.setRepresentative();
             }
         });
@@ -152,7 +157,7 @@ public class CardService {
     public CommonResponse<DeleteCardResponse> deleteCard(Long id, UserDetails userDetails) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
         Card card = cardRepository.findByIdAndUserAndStatus(id, user, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Card not found, id: " + id));
+            .orElseThrow(() -> new NotFoundException("Card not found, id: " + id));
 
         card.delete();
         cardRepository.save(card);

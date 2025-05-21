@@ -9,7 +9,12 @@ import com.github.maitmus.pcgspring.excpetion.ForbiddenException;
 import com.github.maitmus.pcgspring.excpetion.NotFoundException;
 import com.github.maitmus.pcgspring.park.v1.entity.Park;
 import com.github.maitmus.pcgspring.park.v1.repository.ParkRepository;
-import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.*;
+import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.CreateParkingTransactionResponse;
+import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.CurrentParkingTransactionDetail;
+import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.CurrentParkingTransactionDetails;
+import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.ParkingTransactionDetail;
+import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.ParkingTransactionDetails;
+import com.github.maitmus.pcgspring.parkingTransaction.v1.dto.ParkingTransactionRequest;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.entity.ParkingTransaction;
 import com.github.maitmus.pcgspring.parkingTransaction.v1.repository.ParkingTransactionRepository;
 import com.github.maitmus.pcgspring.user.v1.dto.UserDetails;
@@ -42,11 +47,12 @@ public class ParkingTransactionService {
     private Integer parkingFeePerMinute;
 
     @Transactional
-    public CommonResponse<CreateParkingTransactionResponse> createParkingTransaction(ParkingTransactionRequest request, String manageCode) {
+    public CommonResponse<CreateParkingTransactionResponse> createParkingTransaction(ParkingTransactionRequest request,
+                                                                                     String manageCode) {
         Park park = findParkByManageCode(manageCode);
 
         Car car = carRepository.findByCarNumberAndStatus(request.getCarNumber(), EntityStatus.ACTIVE)
-                .orElse(null);
+            .orElse(null);
 
         if (parkingTransactionRepository.existsByCarNumberAndExitTimeIsNull(request.getCarNumber())) {
             throw new ConflictException("Car already parked, carNumber: " + request.getCarNumber());
@@ -55,11 +61,11 @@ public class ParkingTransactionService {
         UUID paymentId = UUID.randomUUID();
 
         ParkingTransaction parkingTransaction = new ParkingTransaction(
-                car != null ? car.getUser() : null,
-                car,
-                park,
-                car != null ? car.getCarNumber() : request.getCarNumber(),
-                paymentId
+            car != null ? car.getUser() : null,
+            car,
+            park,
+            car != null ? car.getCarNumber() : request.getCarNumber(),
+            paymentId
         );
 
         ParkingTransaction newParkingTransaction = parkingTransactionRepository.save(parkingTransaction);
@@ -75,8 +81,7 @@ public class ParkingTransactionService {
 
         if (parkingTransaction.isPaymentRequired(chargingFeePerSecond, parkingFeePerMinute)) {
             throw new ForbiddenException("Payment is not completed, paymentId: " + parkingTransaction.getPaymentId());
-        }
-        else {
+        } else {
             parkingTransaction.setBypassTransaction();
         }
 
@@ -125,41 +130,50 @@ public class ParkingTransactionService {
     }
 
     @Transactional(readOnly = true)
-    public CommonResponse<ParkingTransactionDetails> getParkingTransactions(UserDetails userDetails, Pageable pageable) {
+    public CommonResponse<ParkingTransactionDetails> getParkingTransactions(UserDetails userDetails,
+                                                                            Pageable pageable) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
 
-        Slice<ParkingTransaction> transactions = parkingTransactionRepository.findByUserAndStatus(user, EntityStatus.ACTIVE, pageable);
+        Slice<ParkingTransaction> transactions =
+            parkingTransactionRepository.findByUserAndStatus(user, EntityStatus.ACTIVE, pageable);
 
-        return new CommonResponse<>(new ParkingTransactionDetails(transactions.stream().map(ParkingTransactionDetail::new).toList(), transactions.hasNext()));
+        return new CommonResponse<>(
+            new ParkingTransactionDetails(transactions.stream().map(ParkingTransactionDetail::new).toList(),
+                transactions.hasNext()));
     }
 
     @Transactional(readOnly = true)
     public CommonResponse<CurrentParkingTransactionDetails> getCurrentParkingTransaction(UserDetails userDetails) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
 
-        List<ParkingTransaction> transactions = parkingTransactionRepository.findByUserAndStatusAndIsPaidIsFalse(user, EntityStatus.ACTIVE);
+        List<ParkingTransaction> transactions =
+            parkingTransactionRepository.findByUserAndStatusAndIsPaidIsFalse(user, EntityStatus.ACTIVE);
 
-        return new CommonResponse<>(new CurrentParkingTransactionDetails(transactions.stream().map(transaction -> new CurrentParkingTransactionDetail(transaction, chargingFeePerSecond, parkingFeePerMinute)).toList()));
+        return new CommonResponse<>(new CurrentParkingTransactionDetails(transactions.stream().map(
+                transaction -> new CurrentParkingTransactionDetail(transaction, chargingFeePerSecond, parkingFeePerMinute))
+            .toList()));
     }
 
     private ParkingTransaction findByParkAndCarNumberAndNotExited(@NotBlank String carNumber, Park park) {
         return parkingTransactionRepository.findByParkAndCarNumberAndExitTimeIsNull(
-                park,
-                carNumber
+            park,
+            carNumber
         ).orElseThrow(() -> new ConflictException("Car is not parked, carNumber: " + carNumber));
     }
 
     private Park findParkByManageCode(String manageCode) {
         return parkRepository.findByManageCodeAndStatus(manageCode, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Park not found"));
+            .orElseThrow(() -> new NotFoundException("Park not found"));
     }
 
     @Transactional(readOnly = true)
     public CommonResponse<ParkingTransactionDetail> getUnpaidParkingTransaction(String manageCode, String carNumber) {
         Park park = findParkByManageCode(manageCode);
 
-        ParkingTransaction transaction = parkingTransactionRepository.findByCarNumberAndParkAndStatus(carNumber, park, EntityStatus.ACTIVE)
-            .orElseThrow(() -> new NotFoundException("Parking transaction not found, carNumber: " + carNumber + ", park: " + park.getId()));
+        ParkingTransaction transaction =
+            parkingTransactionRepository.findByCarNumberAndParkAndStatus(carNumber, park, EntityStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException(
+                    "Parking transaction not found, carNumber: " + carNumber + ", park: " + park.getId()));
 
         return new CommonResponse<>(new ParkingTransactionDetail(transaction));
     }

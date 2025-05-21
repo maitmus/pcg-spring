@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class FindUsernameRequest {
     @NotBlank
-    @Size(min=2, max = 20)
+    @Size(min = 2, max = 20)
     private String name;
     @Email
     private String email;

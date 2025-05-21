@@ -1,12 +1,18 @@
 package com.github.maitmus.pcgspring.auth.v1.service;
 
-import com.github.maitmus.pcgspring.auth.v1.dto.*;
+import com.github.maitmus.pcgspring.auth.v1.dto.CreateUserRequest;
+import com.github.maitmus.pcgspring.auth.v1.dto.CreateUserResponse;
+import com.github.maitmus.pcgspring.auth.v1.dto.FindUsernameRequest;
+import com.github.maitmus.pcgspring.auth.v1.dto.FindUsernameResponse;
+import com.github.maitmus.pcgspring.auth.v1.dto.LoginRequest;
+import com.github.maitmus.pcgspring.auth.v1.dto.LoginResponse;
+import com.github.maitmus.pcgspring.auth.v1.dto.ResetPasswordEmailRequest;
+import com.github.maitmus.pcgspring.auth.v1.dto.ResetPasswordRequest;
 import com.github.maitmus.pcgspring.auth.v1.entity.EmailToken;
 import com.github.maitmus.pcgspring.auth.v1.event.EmailTokenCreatedEvent;
 import com.github.maitmus.pcgspring.auth.v1.repository.AuthRepository;
 import com.github.maitmus.pcgspring.auth.v1.repository.EmailTokenRepository;
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
-import com.github.maitmus.pcgspring.common.constant.Role;
 import com.github.maitmus.pcgspring.common.constant.TokenType;
 import com.github.maitmus.pcgspring.excpetion.BadRequestException;
 import com.github.maitmus.pcgspring.excpetion.NotFoundException;
@@ -21,9 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.UUID.randomUUID;
 
@@ -63,7 +66,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public LoginResponse login(@Valid LoginRequest request) {
         User user = authRepository.findByUsernameAndStatus(request.getUsername(), EntityStatus.ACTIVE)
-                .orElse(null);
+            .orElse(null);
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadRequestException("Invalid username or password");
@@ -73,16 +76,16 @@ public class AuthService {
         String refreshToken = tokenService.generateToken(user, TokenType.REFRESH);
 
         return LoginResponse.builder()
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .birth(user.getBirth())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+            .name(user.getName())
+            .nickname(user.getNickname())
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .birth(user.getBirth())
+            .createdAt(user.getCreatedAt())
+            .updatedAt(user.getUpdatedAt())
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
     }
 
     @Transactional(readOnly = true)
@@ -94,38 +97,42 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public FindUsernameResponse findUsername(@Valid FindUsernameRequest request) {
-        User user = authRepository.findByNameAndEmailAndStatus(request.getName(), request.getEmail(), EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("User not found, name: " + request.getName() + ", email: " + request.getEmail()));
+        User user =
+            authRepository.findByNameAndEmailAndStatus(request.getName(), request.getEmail(), EntityStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException(
+                    "User not found, name: " + request.getName() + ", email: " + request.getEmail()));
         return new FindUsernameResponse(user.getUsername());
     }
 
     @Transactional
     public void createPasswordResetEmailToken(@Valid ResetPasswordEmailRequest request) {
-        User user = authRepository.findByEmailAndUsernameAndStatus(request.getEmail(), request.getUsername(), EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("User not found, email: " + request.getEmail() + ", username: " + request.getUsername()));
+        User user = authRepository.findByEmailAndUsernameAndStatus(request.getEmail(), request.getUsername(),
+                EntityStatus.ACTIVE)
+            .orElseThrow(() -> new NotFoundException(
+                "User not found, email: " + request.getEmail() + ", username: " + request.getUsername()));
 
         String tokenString = randomUUID()
-                .toString()
-                .substring(0, 6)
-                .toUpperCase();
+            .toString()
+            .substring(0, 6)
+            .toUpperCase();
 
         EmailToken token = new EmailToken(passwordEncoder.encode(tokenString), user);
 
         EmailToken newEmailToken = emailTokenRepository.save(token);
 
         applicationEventPublisher.publishEvent(
-                new EmailTokenCreatedEvent(newEmailToken, tokenString)
+            new EmailTokenCreatedEvent(newEmailToken, tokenString)
         );
     }
 
     @Transactional
     public void resetPassword(@Valid ResetPasswordRequest request) {
         User user = userRepository.findByUsernameAndStatus(request.getUsername(), EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("User not found, username: " + request.getUsername()));
+            .orElseThrow(() -> new NotFoundException("User not found, username: " + request.getUsername()));
         LocalDateTime threshold = LocalDateTime.now().minusMinutes(5);
 
         EmailToken token = emailTokenRepository.findByUserAndStatus(user, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Email token not found"));
+            .orElseThrow(() -> new NotFoundException("Email token not found"));
 
         if (!passwordEncoder.matches(request.getToken(), token.getToken())) {
             throw new BadRequestException("Invalid token");

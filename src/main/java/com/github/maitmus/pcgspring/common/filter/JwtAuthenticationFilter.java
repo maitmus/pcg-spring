@@ -62,9 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = claims.get("email", String.class);
                 List<?> rawRoles = claims.get("roles", List.class);
                 List<String> rolesString = rawRoles.stream()
-                        .filter(Objects::nonNull)
-                        .map(Object::toString)
-                        .toList();
+                    .filter(Objects::nonNull)
+                    .map(Object::toString)
+                    .toList();
                 List<Role> roles = rolesString.stream().map(Role::valueOf).toList();
                 String statusString = claims.get("status", String.class);
                 EntityStatus status = EntityStatus.valueOf(statusString);
@@ -76,13 +76,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 LocalDateTime createdAt = LocalDateTime.parse(rawCreatedAt);
                 LocalDateTime updatedAt = LocalDateTime.parse(rawUpdatedAt);
 
-                UserDetails userDetails = new UserDetails(id, name, nickname, email, username, birth, roles, status, createdAt, updatedAt);
+                UserDetails userDetails =
+                    new UserDetails(id, name, nickname, email, username, birth, roles, status, createdAt, updatedAt);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        roles.stream().map(role ->
-                                        new SimpleGrantedAuthority("ROLE_" + role.name()))
-                                .collect(Collectors.toList())
+                    userDetails,
+                    null,
+                    roles.stream().map(role ->
+                            new SimpleGrantedAuthority("ROLE_" + role.name()))
+                        .collect(Collectors.toList())
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

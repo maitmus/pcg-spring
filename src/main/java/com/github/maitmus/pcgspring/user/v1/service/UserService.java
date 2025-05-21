@@ -33,6 +33,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findByIdOrElseThrow(Long id) {
         return userRepository.findByIdAndStatus(id, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("User not found, id: " + id));
+            .orElseThrow(() -> new NotFoundException("User not found, id: " + id));
     }
 }

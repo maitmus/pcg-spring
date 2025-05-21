@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface CarRepository extends CrudRepository<Car, Long> {
     Optional<Car> findByCarNumberAndStatus(String carNumber, EntityStatus status);
+
     List<Car> findByUserAndStatus(User user, EntityStatus status);
 
     Optional<Car> findByIdAndUserAndStatus(Long id, User user, EntityStatus status);

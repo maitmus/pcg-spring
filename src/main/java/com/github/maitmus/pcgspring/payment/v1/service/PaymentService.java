@@ -48,7 +48,8 @@ public class PaymentService {
     public CommonResponse<?> pay(UserDetails userDetails, @Valid PayRequest request) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
 
-        Card representativeCard = cardRepository.findOneByUserAndStatusAndIsRepresentativeIsTrue(user, EntityStatus.ACTIVE)
+        Card representativeCard =
+            cardRepository.findOneByUserAndStatusAndIsRepresentativeIsTrue(user, EntityStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("Representative Card not found"));
 
         String decryptedRepresentativeCustomerId;
@@ -62,9 +63,10 @@ public class PaymentService {
         String accessToken = portOneService.getAccessToken();
 
         ParkingTransaction transaction = parkingTransactionRepository.findByPaymentIdAndStatusAndIsPaidIsFalse(
-                request.getPaymentId(),
-                EntityStatus.ACTIVE
-        ).orElseThrow(() -> new BadRequestException("Parking Transaction not found, paymentId: " + request.getPaymentId()));
+            request.getPaymentId(),
+            EntityStatus.ACTIVE
+        ).orElseThrow(
+            () -> new BadRequestException("Parking Transaction not found, paymentId: " + request.getPaymentId()));
 
         if (transaction.getCar() == null) {
             throw new BadRequestException("Car not linked, paymentId: " + request.getPaymentId());
@@ -94,11 +96,11 @@ public class PaymentService {
         formData.add("product_type", "digital");
 
         PortOneGeneralResponse<?> response = webclientService.sendFormDataRequest(
-                HttpMethod.POST,
-                billingApiUrl + "/subscribe/payments/again",
-                formData,
-                PortOneGeneralResponse.class,
-                accessToken
+            HttpMethod.POST,
+            billingApiUrl + "/subscribe/payments/again",
+            formData,
+            PortOneGeneralResponse.class,
+            accessToken
         );
 
         if (response.getCode() != 0) {

@@ -20,9 +20,9 @@ public class JwtTokenValidator {
         try {
             // 토큰 파싱 및 검증
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token);
 
             return claimsJws.getBody();
         } catch (Exception ex) {

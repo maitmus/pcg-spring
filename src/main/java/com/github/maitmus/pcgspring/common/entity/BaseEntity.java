@@ -1,7 +1,15 @@
 package com.github.maitmus.pcgspring.common.entity;
 
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,22 +23,18 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
-    @Column
-    private LocalDateTime deletedAt;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     protected EntityStatus status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+    @Column
+    private LocalDateTime deletedAt;
 
     @PrePersist
     public void prePersist() {

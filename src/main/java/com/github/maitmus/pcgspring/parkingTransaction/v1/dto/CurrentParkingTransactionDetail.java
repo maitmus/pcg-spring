@@ -14,20 +14,21 @@ public class CurrentParkingTransactionDetail extends ParkingTransactionDetail {
     private long currentChargeTime;
     private Integer expectingTotalAmount;
 
-    public CurrentParkingTransactionDetail(ParkingTransaction transaction, int chargingFeePerSecond, int parkingFeePerMinute) {
+    public CurrentParkingTransactionDetail(ParkingTransaction transaction, int chargingFeePerSecond,
+                                           int parkingFeePerMinute) {
         super(transaction);
 
         LocalDateTime now = LocalDateTime.now();
         this.currentParkingTime = Duration.between(transaction.getEntryTime(), now).toSeconds();
-        this.expectingTotalAmount = transaction.getCurrentChargeAmount(chargingFeePerSecond) + transaction.getCurrentParkingAmount(parkingFeePerMinute);
+        this.expectingTotalAmount = transaction.getCurrentChargeAmount(chargingFeePerSecond) +
+            transaction.getCurrentParkingAmount(parkingFeePerMinute);
 
         if (transaction.getChargeStartTime() == null) {
             this.currentChargeTime = 0;
-        }
-        else if (transaction.getChargeEndTime() != null) {
-            this.currentChargeTime = Duration.between(transaction.getChargeStartTime(), transaction.getChargeEndTime()).toSeconds();
-        }
-        else {
+        } else if (transaction.getChargeEndTime() != null) {
+            this.currentChargeTime =
+                Duration.between(transaction.getChargeStartTime(), transaction.getChargeEndTime()).toSeconds();
+        } else {
             this.currentChargeTime = Duration.between(transaction.getChargeStartTime(), now).toSeconds();
         }
     }

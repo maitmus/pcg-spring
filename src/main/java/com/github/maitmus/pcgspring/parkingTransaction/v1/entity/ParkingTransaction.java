@@ -4,7 +4,11 @@ import com.github.maitmus.pcgspring.car.v1.entity.Car;
 import com.github.maitmus.pcgspring.common.entity.BaseEntity;
 import com.github.maitmus.pcgspring.park.v1.entity.Park;
 import com.github.maitmus.pcgspring.user.v1.entity.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,11 +51,11 @@ public class ParkingTransaction extends BaseEntity {
     private UUID paymentId;
 
     public ParkingTransaction(
-            User user,
-            Car car,
-            Park park,
-            String carNumber,
-            UUID paymentId
+        User user,
+        Car car,
+        Park park,
+        String carNumber,
+        UUID paymentId
     ) {
         this.user = user;
         this.car = car;
@@ -110,7 +114,8 @@ public class ParkingTransaction extends BaseEntity {
     }
 
     public boolean isPaymentRequired(Integer chargingFeePerSecond, Integer parkingFeePerMinute) {
-        return !isPaid && getCurrentChargeAmount(chargingFeePerSecond) + getCurrentParkingAmount(parkingFeePerMinute) >= 100;
+        return !isPaid &&
+            getCurrentChargeAmount(chargingFeePerSecond) + getCurrentParkingAmount(parkingFeePerMinute) >= 100;
     }
 
     private void recordPaymentInfos() {

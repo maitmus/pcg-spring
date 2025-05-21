@@ -16,10 +16,16 @@ import java.util.UUID;
 
 public interface ParkingTransactionRepository extends JpaRepository<ParkingTransaction, Long> {
     boolean existsByCarNumberAndExitTimeIsNull(@NotBlank String carNumber);
+
     Optional<ParkingTransaction> findByParkAndCarNumberAndExitTimeIsNull(Park park, String carNumber);
+
     Optional<ParkingTransaction> findByPaymentIdAndStatusAndIsPaidIsFalse(@NotNull UUID paymentId, EntityStatus status);
+
     List<ParkingTransaction> findByCarNumberAndStatus(String carNumber, EntityStatus status);
+
     List<ParkingTransaction> findByUserAndStatusAndIsPaidIsFalse(User user, EntityStatus status);
+
     Slice<ParkingTransaction> findByUserAndStatus(User user, EntityStatus entityStatus, Pageable pageable);
+
     Optional<ParkingTransaction> findByCarNumberAndParkAndStatus(String carNumber, Park park, EntityStatus status);
 }

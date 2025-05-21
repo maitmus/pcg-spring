@@ -1,6 +1,10 @@
 package com.github.maitmus.pcgspring.car.v1.service;
 
-import com.github.maitmus.pcgspring.car.v1.dto.*;
+import com.github.maitmus.pcgspring.car.v1.dto.CarDetail;
+import com.github.maitmus.pcgspring.car.v1.dto.CarDetails;
+import com.github.maitmus.pcgspring.car.v1.dto.CreateCarRequest;
+import com.github.maitmus.pcgspring.car.v1.dto.CreateCarResponse;
+import com.github.maitmus.pcgspring.car.v1.dto.DeleteCarResponse;
 import com.github.maitmus.pcgspring.car.v1.entity.Car;
 import com.github.maitmus.pcgspring.car.v1.repository.CarRepository;
 import com.github.maitmus.pcgspring.common.constant.EntityStatus;
@@ -28,13 +32,14 @@ public class CarService {
     public CommonResponse<CreateCarResponse> createCar(CreateCarRequest request, UserDetails userDetails) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
         Car car = new Car(
-                request.getCarNumber(),
-                user
+            request.getCarNumber(),
+            user
         );
 
         Car newCar = carRepository.save(car);
 
-        List<ParkingTransaction> targetTransactions = parkingTransactionRepository.findByCarNumberAndStatus(car.getCarNumber(), EntityStatus.ACTIVE);
+        List<ParkingTransaction> targetTransactions =
+            parkingTransactionRepository.findByCarNumberAndStatus(car.getCarNumber(), EntityStatus.ACTIVE);
 
         targetTransactions.forEach(transaction -> transaction.linkCarInfo(user, newCar));
 
@@ -57,7 +62,7 @@ public class CarService {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
 
         Car car = carRepository.findByIdAndUserAndStatus(id, user, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Car not found, id: " + id));
+            .orElseThrow(() -> new NotFoundException("Car not found, id: " + id));
 
         car.delete();
 

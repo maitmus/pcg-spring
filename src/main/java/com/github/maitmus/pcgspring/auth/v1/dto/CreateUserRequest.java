@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateUserRequest extends LoginRequest {
     @NotBlank
-    @Size(min=2, max = 20)
+    @Size(min = 2, max = 20)
     private String name;
 
     @NotBlank

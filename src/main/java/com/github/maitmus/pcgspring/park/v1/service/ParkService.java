@@ -23,15 +23,15 @@ public class ParkService {
         User owner = userService.findByIdOrElseThrow(userDetails.getId());
 
         Park newPark = new Park(
-                request.getName(),
-                request.getPhone(),
-                request.getAddress(),
-                request.getDisabilitySpace(),
-                request.getManageCode(),
-                request.getLat(),
-                request.getLon(),
-                request.getIp(),
-                owner
+            request.getName(),
+            request.getPhone(),
+            request.getAddress(),
+            request.getDisabilitySpace(),
+            request.getManageCode(),
+            request.getLat(),
+            request.getLon(),
+            request.getIp(),
+            owner
         );
 
         parkRepository.save(newPark);

@@ -26,17 +26,18 @@ public class PortOneService {
 
     public String getAccessToken() {
         PortOneAccessTokenRequest requestBody = new PortOneAccessTokenRequest(
-                portOneApiKey,
-                portOneApiSecret
+            portOneApiKey,
+            portOneApiSecret
         );
 
         PortOneGeneralResponse<PortOneAccessTokenResponse> accessTokenResponse =
-                webclientService.sendRequest(
-                        HttpMethod.POST,
-                        billingApiUrl + "/users/getToken",
-                        requestBody,
-                        new ParameterizedTypeReference<>() {}
-                );
+            webclientService.sendRequest(
+                HttpMethod.POST,
+                billingApiUrl + "/users/getToken",
+                requestBody,
+                new ParameterizedTypeReference<>() {
+                }
+            );
 
         return accessTokenResponse.getResponse().getAccessToken();
     }

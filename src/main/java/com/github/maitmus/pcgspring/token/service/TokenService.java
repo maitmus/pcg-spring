@@ -44,12 +44,12 @@ public class TokenService {
         }
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(user.getUsername())
-                .signWith(jwtTokenValidator.getSigningKey(), SignatureAlgorithm.HS256)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .compact();
+            .setClaims(claims)
+            .setSubject(user.getUsername())
+            .signWith(jwtTokenValidator.getSigningKey(), SignatureAlgorithm.HS256)
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .compact();
     }
 }
 
