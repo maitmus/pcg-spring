@@ -18,9 +18,10 @@ public class PublicParkController {
     private final PublicParkService publicParkService;
 
     @GetMapping
-    @Operation(summary = "주차장 조회(5Km 이내)", description = "local에서는 작동하지 않음")
-    public CommonResponse<?> getParks(@RequestParam Double lat,
-                                      @RequestParam Double lon) {
-        return publicParkService.getParksByCoordinate(lat, lon);
+    @Operation(summary = "주차장 조회(5Km 이내)", description = "local에서는 위/경도 제공 시 작동하지 않음, 위/경도가 전부 null일 경우 전체 주차장 목록 반환")
+    public CommonResponse<?> getParks(@RequestParam(required = false) Double lat,
+                                      @RequestParam(required = false) Double lon,
+                                      @RequestParam(required = false) String searchKeyword) {
+        return publicParkService.getParksByCoordinate(lat, lon, searchKeyword);
     }
 }

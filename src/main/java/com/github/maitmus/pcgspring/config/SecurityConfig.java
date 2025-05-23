@@ -77,6 +77,7 @@ public class SecurityConfig {
                 httpHeaders.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> {
                 urlWhitelist.forEach(url -> auth.requestMatchers(url).permitAll());
+                auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
                 auth.anyRequest().authenticated();
             })
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

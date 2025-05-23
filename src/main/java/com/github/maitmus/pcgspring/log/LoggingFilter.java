@@ -18,6 +18,10 @@ public class LoggingFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
         throws ServletException, IOException {
+        if (request.getRequestURI().startsWith("/api/health") && response.getStatus() == 200) {
+            return;
+        }
+
         long startTime = System.currentTimeMillis();
 
         String method = request.getMethod();
