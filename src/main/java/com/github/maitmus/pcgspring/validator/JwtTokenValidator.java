@@ -1,6 +1,6 @@
 package com.github.maitmus.pcgspring.validator;
 
-import com.github.maitmus.pcgspring.common.exception.UnauthorizedException;
+import com.github.maitmus.pcgspring.excpetion.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
