@@ -32,7 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resources/application-local.yaml
-src/main/resources/application-dockerLocal.yaml
+src/main/resources/application-local.properties
+src/main/resources/application-dockerLocal.properties
 
 src/main/resources/data-local.sql
