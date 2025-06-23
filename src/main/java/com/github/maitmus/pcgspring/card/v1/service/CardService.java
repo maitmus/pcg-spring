@@ -71,7 +71,7 @@ public class CardService {
         );
 
         if (response.getCode() != 0) {
-            throw new RuntimeException("Error subscribing to billing api: " + response.getMessage());
+            throw new RuntimeException("카드 정보 생성 시 오류 발생. 원인: " + response.getMessage());
         }
 
         try {
@@ -138,7 +138,7 @@ public class CardService {
         Optional<Card> targetCard = cards.stream().filter(card -> card.getId().equals(request.getId())).findFirst();
 
         if (targetCard.isEmpty()) {
-            throw new BadRequestException("Card not found, id: " + request.getId());
+            throw new BadRequestException("카드 정보를 찾을 수 없습니다. id: " + request.getId());
         }
 
         cards.forEach(card -> {
@@ -157,7 +157,7 @@ public class CardService {
     public CommonResponse<DeleteCardResponse> deleteCard(Long id, UserDetails userDetails) {
         User user = userService.findByIdOrElseThrow(userDetails.getId());
         Card card = cardRepository.findByIdAndUserAndStatus(id, user, EntityStatus.ACTIVE)
-            .orElseThrow(() -> new NotFoundException("Card not found, id: " + id));
+            .orElseThrow(() -> new NotFoundException("카드 정보를 찾을 수 없습니다. id: " + id));
 
         card.delete();
         cardRepository.save(card);

@@ -55,7 +55,7 @@ public class ParkingTransactionService {
             .orElse(null);
 
         if (parkingTransactionRepository.existsByCarNumberAndExitTimeIsNull(request.getCarNumber())) {
-            throw new ConflictException("Car already parked, carNumber: " + request.getCarNumber());
+            throw new ConflictException("자동차가 이미 주차되었습니다. 번호: " + request.getCarNumber());
         }
 
         UUID paymentId = UUID.randomUUID();
@@ -80,7 +80,7 @@ public class ParkingTransactionService {
         ParkingTransaction parkingTransaction = findByParkAndCarNumberAndNotExited(request.getCarNumber(), park);
 
         if (parkingTransaction.isPaymentRequired(chargingFeePerSecond, parkingFeePerMinute)) {
-            throw new ForbiddenException("Payment is not completed, paymentId: " + parkingTransaction.getPaymentId());
+            throw new ForbiddenException("결제가 완료되지 않았습니다. 결제 아이디: " + parkingTransaction.getPaymentId());
         } else {
             parkingTransaction.setBypassTransaction();
         }
@@ -99,7 +99,7 @@ public class ParkingTransactionService {
         ParkingTransaction parkingTransaction = findByParkAndCarNumberAndNotExited(request.getCarNumber(), park);
 
         if (parkingTransaction.getChargeStartTime() != null) {
-            throw new ConflictException("Car is already charging, carNumber: " + request.getCarNumber());
+            throw new ConflictException("자동차가 이미 충전중입니다. 번호: " + request.getCarNumber());
         }
 
         parkingTransaction.startCharge();
@@ -116,11 +116,11 @@ public class ParkingTransactionService {
         ParkingTransaction parkingTransaction = findByParkAndCarNumberAndNotExited(request.getCarNumber(), park);
 
         if (parkingTransaction.getChargeStartTime() == null) {
-            throw new ConflictException("Car is not charging, carNumber: " + request.getCarNumber());
+            throw new ConflictException("자동차가 충전 중이 아닙니다. 번호: " + request.getCarNumber());
         }
 
         if (parkingTransaction.getChargeEndTime() != null) {
-            throw new ConflictException("Car is already charged, carNumber: " + request.getCarNumber());
+            throw new ConflictException("이미 충전을 완료했습니다. 번호: " + request.getCarNumber());
         }
 
         parkingTransaction.finishCharge(chargingFeePerSecond);
@@ -158,12 +158,12 @@ public class ParkingTransactionService {
         return parkingTransactionRepository.findByParkAndCarNumberAndExitTimeIsNull(
             park,
             carNumber
-        ).orElseThrow(() -> new ConflictException("Car is not parked, carNumber: " + carNumber));
+        ).orElseThrow(() -> new ConflictException("주차되지 않은 자동차입니다. 번호: " + carNumber));
     }
 
     private Park findParkByManageCode(String manageCode) {
         return parkRepository.findByManageCodeAndStatus(manageCode, EntityStatus.ACTIVE)
-            .orElseThrow(() -> new NotFoundException("Park not found"));
+            .orElseThrow(() -> new NotFoundException("주차장 정보를 찾을 수 없습니다."));
     }
 
     @Transactional(readOnly = true)
@@ -173,7 +173,7 @@ public class ParkingTransactionService {
         ParkingTransaction transaction =
             parkingTransactionRepository.findByCarNumberAndParkAndStatus(carNumber, park, EntityStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException(
-                    "Parking transaction not found, carNumber: " + carNumber + ", park: " + park.getId()));
+                    "주차 내역을 찾을 수 없습니다. 번호: " + carNumber + ", 주차장: " + park.getId()));
 
         return new CommonResponse<>(new ParkingTransactionDetail(transaction));
     }

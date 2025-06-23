@@ -50,7 +50,7 @@ public class PaymentService {
 
         Card representativeCard =
             cardRepository.findOneByUserAndStatusAndIsRepresentativeIsTrue(user, EntityStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Representative Card not found"));
+                .orElseThrow(() -> new NotFoundException("대표 카드 정보가 없습니다."));
 
         String decryptedRepresentativeCustomerId;
 
@@ -66,14 +66,14 @@ public class PaymentService {
             request.getPaymentId(),
             EntityStatus.ACTIVE
         ).orElseThrow(
-            () -> new BadRequestException("Parking Transaction not found, paymentId: " + request.getPaymentId()));
+            () -> new BadRequestException("주차 정보를 찾을 수 없습니다. 결제 아이디: " + request.getPaymentId()));
 
         if (transaction.getCar() == null) {
-            throw new BadRequestException("Car not linked, paymentId: " + request.getPaymentId());
+            throw new BadRequestException("비회원 차량입니다. 결제 아이디: " + request.getPaymentId());
         }
 
         if (!Objects.equals(transaction.getCar().getUser().getId(), user.getId())) {
-            throw new BadRequestException("Invalid payment, paymentId: " + request.getPaymentId());
+            throw new BadRequestException("사용자가 등록한 차량의 결제 정보가 아닙니다. 결제 아이디: " + request.getPaymentId());
         }
 
         int parkingAmount = transaction.getCurrentParkingAmount(parkingFeePerMinute);
@@ -104,7 +104,7 @@ public class PaymentService {
         );
 
         if (response.getCode() != 0) {
-            throw new RuntimeException("Payment failed, message: " + response.getMessage());
+            throw new RuntimeException("결제 도중 오류 발생. 원인: " + response.getMessage());
         }
 
         transaction.completePayment(totalAmount, parkingAmount);

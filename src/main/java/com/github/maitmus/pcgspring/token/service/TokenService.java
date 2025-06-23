@@ -40,7 +40,7 @@ public class TokenService {
         } else if (type.equals(TokenType.REFRESH)) {
             expiryDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME);
         } else {
-            throw new IllegalArgumentException("Unsupported type: " + type);
+            throw new IllegalArgumentException("잘못된 토큰 타입: " + type);
         }
 
         return Jwts.builder()

@@ -43,11 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (accessToken == null || accessToken.isBlank()) {
-                throw new Exception("Token not found");
+                throw new Exception("토큰이 필요합니다.");
             }
 
             if (!accessToken.startsWith("Bearer")) {
-                throw new Exception("Invalid access token");
+                throw new Exception("잘못된 토큰");
             }
 
             accessToken = accessToken.substring("Bearer ".length());

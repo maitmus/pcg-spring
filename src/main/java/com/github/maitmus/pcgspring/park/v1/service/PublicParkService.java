@@ -19,7 +19,7 @@ public class PublicParkService {
     public CommonResponse<ParkDetails> getParksByCoordinate(Double lat, Double lon, String searchKeyword) {
         if ((lat != null && lon == null) || (lat == null && lon != null)) {
             throw new BadRequestException(
-                "Latitude and longitude must be both null or both not null. Latitude: " + lat + ", Longitude: " + lon);
+                "위도, 경도는 동시에 제공되지 않거나 둘 다 제공되어야 합니다. 위도: " + lat + ", 경도: " + lon);
         }
 
         if (lat == null) {

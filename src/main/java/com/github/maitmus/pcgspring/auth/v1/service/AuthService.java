@@ -69,7 +69,7 @@ public class AuthService {
             .orElse(null);
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadRequestException("Invalid username or password");
+            throw new BadRequestException("아이디나 비밀번호가 일치하지 않습니다.");
         }
 
         String accessToken = tokenService.generateToken(user, TokenType.ACCESS);
@@ -91,7 +91,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public void checkUsernameDuplicate(String username) {
         if (authRepository.existsByUsername(username)) {
-            throw new BadRequestException("Username already exists");
+            throw new BadRequestException("아이디가 이미 존재합니다.");
         }
     }
 
@@ -100,7 +100,7 @@ public class AuthService {
         User user =
             authRepository.findByNameAndEmailAndStatus(request.getName(), request.getEmail(), EntityStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException(
-                    "User not found, name: " + request.getName() + ", email: " + request.getEmail()));
+                    "사용자를 찾을 수 없습니다. 이름: " + request.getName() + ", 이메일: " + request.getEmail()));
         return new FindUsernameResponse(user.getUsername());
     }
 
@@ -109,7 +109,7 @@ public class AuthService {
         User user = authRepository.findByEmailAndUsernameAndStatus(request.getEmail(), request.getUsername(),
                 EntityStatus.ACTIVE)
             .orElseThrow(() -> new NotFoundException(
-                "User not found, email: " + request.getEmail() + ", username: " + request.getUsername()));
+                "사용자를 찾을 수 없습니다. 이메일: " + request.getEmail() + ", 아이디: " + request.getUsername()));
 
         String tokenString = randomUUID()
             .toString()
@@ -128,19 +128,19 @@ public class AuthService {
     @Transactional
     public void resetPassword(@Valid ResetPasswordRequest request) {
         User user = userRepository.findByUsernameAndStatus(request.getUsername(), EntityStatus.ACTIVE)
-            .orElseThrow(() -> new NotFoundException("User not found, username: " + request.getUsername()));
+            .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다. 아이디: " + request.getUsername()));
         LocalDateTime threshold = LocalDateTime.now().minusMinutes(5);
 
         EmailToken token = emailTokenRepository.findByUserAndStatus(user, EntityStatus.ACTIVE)
-            .orElseThrow(() -> new NotFoundException("Email token not found"));
+            .orElseThrow(() -> new NotFoundException("잘못된 인증 코드입니다."));
 
         if (!passwordEncoder.matches(request.getToken(), token.getToken())) {
-            throw new BadRequestException("Invalid token");
+            throw new BadRequestException("잘못된 인증 코드입니다.");
         }
 
         if (token.getCreatedAt().isBefore(threshold)) {
             emailTokenRepository.delete(token);
-            throw new BadRequestException("Email token expired");
+            throw new BadRequestException("인증 토큰이 만료되었습니다.");
         }
 
         String hashedNewPassword = hashPassword(request.getPassword());

@@ -26,7 +26,7 @@ public class JwtTokenValidator {
 
             return claimsJws.getBody();
         } catch (Exception ex) {
-            throw new UnauthorizedException("Failed to decode JWT: " + ex.getMessage());
+            throw new UnauthorizedException("토큰 해석 도중 오류 발생. 원인: " + ex.getMessage());
         }
     }
 
