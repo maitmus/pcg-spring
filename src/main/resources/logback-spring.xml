@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <springProfile name="!local">
+    <springProfile name="!local &amp; !local-db">
         <appender name="FILE1" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -28,8 +28,8 @@
         </root>
     </springProfile>
 
-    <springProfile name="local">
-        <root level="DEBUG">
+    <springProfile name="local, local-db">
+        <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>

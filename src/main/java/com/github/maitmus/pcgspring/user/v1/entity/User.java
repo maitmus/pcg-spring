@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "userId"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private final List<Role> roles = new ArrayList<>();
     @Column(length = 20)

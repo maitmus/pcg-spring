@@ -34,5 +34,6 @@ build/
 
 src/main/resources/application-local.properties
 src/main/resources/application-dockerLocal.properties
+src/main/resources/application-local-db.properties
 
 src/main/resources/data-local.sql
