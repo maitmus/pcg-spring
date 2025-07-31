@@ -8,20 +8,21 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: standard
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-db
+  name: pcg-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-db
+      app: pcg-db
   template:
     metadata:
       labels:
-        app: postgres-db
+        app: pcg-db
     spec:
       containers:
         - name: postgres
@@ -48,10 +49,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-service
+  name: pcg-db
 spec:
   selector:
-    app: postgres-db
+    app: pcg-db
   ports:
     - port: 5432
       targetPort: 5432
