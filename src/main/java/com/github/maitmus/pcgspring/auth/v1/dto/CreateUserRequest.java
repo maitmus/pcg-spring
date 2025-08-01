@@ -1,5 +1,6 @@
 package com.github.maitmus.pcgspring.auth.v1.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,7 @@ public class CreateUserRequest extends LoginRequest {
     @NotNull
     private LocalDate birth;
 
+    @Schema(hidden = true)
     public void setHashedPassword(String hashedPassword) {
         this.password = hashedPassword;
     }

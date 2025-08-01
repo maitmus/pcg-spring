@@ -33,9 +33,15 @@ spec:
             - name: POSTGRES_DB
               value: pcg
             - name: POSTGRES_USER
-              value: username
+              valueFrom:
+                secretKeyRef:
+                  name: pcg-secret
+                  key: db-username
             - name: POSTGRES_PASSWORD
-              value: password
+              valueFrom:
+                secretKeyRef:
+                  name: pcg-secret
+                  key: db-password
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
           volumeMounts:
